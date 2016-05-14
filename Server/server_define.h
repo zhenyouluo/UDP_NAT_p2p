@@ -1,12 +1,4 @@
 #pragma once
-const int LOGIN = 0;
-const int LOGOUT = 0;
-
-using namespace std;
-int Error = 0;
-int option = 0;
-
-char* recvBuff = nullptr;
 
 typedef struct ClientNode
 {
@@ -14,6 +6,28 @@ typedef struct ClientNode
 	char* ip = nullptr;
 	unsigned short port = 0;
 	ClientNode* next = nullptr;
-}ClientNode, *ClientNodep;
+}*ClientNodep;
 
-ClientNodep head = nullptr;
+typedef struct stMessage
+{
+	char* ip = nullptr;
+	char* message = nullptr;
+}*stMessagep;
+
+
+class Client
+{
+public:
+	ClientNodep Create(ClientNodep);
+	ClientNodep insert_tail(ClientNodep);
+	void print(ClientNodep);
+protected:
+	bool initWinSock();
+	stMessagep transmit(stMessagep);
+private:
+	ClientNodep head = nullptr;
+	stMessagep msg = nullptr;
+	char* recvBuff = nullptr;
+	int err = 0;
+};
+

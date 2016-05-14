@@ -11,5 +11,7 @@
 #include <tchar.h>
 #include <iostream>
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+using namespace std;
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "server_define.h"

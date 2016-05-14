@@ -64,9 +64,9 @@ bool InitWinsock(int _port, char* ip)
 
 int main()
 {
-	char ip[13] = "";
+	char ip[13] = "127.0.0.1";
 	cout << "Server address:";
-	cin >> ip;
+	cout << ip << endl;
 	cout << "Please input your account:";
 	if (InitWinsock(8880, ip) == false)
 	{
