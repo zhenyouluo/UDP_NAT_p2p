@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include <WinSock2.h>
 #include <iostream>
-#include "client_define.h"
-
 #pragma comment(lib,"ws2_32.lib")
 
 
@@ -16,7 +14,7 @@ int Error = 0;
 
 
 
-bool InitWinsock(int _port, char* ip)
+bool InitWinsock(int _port, char* ip, char* sendBuff)
 {
 	WSADATA wsaData;
 	if (0 != WSAStartup(MAKEWORD(2, 2), &wsaData))
@@ -42,7 +40,7 @@ bool InitWinsock(int _port, char* ip)
 	addrServ.sin_port = htons(_port);
 
 
-	cin >> sendBuff;
+
 	if (sendto(sockClient, sendBuff, strlen(sendBuff) + 1, 0, (SOCKADDR*)&addrServ, sizeof(SOCKADDR)) < 0)
 	{
 		Error = WSAGetLastError();
@@ -64,15 +62,23 @@ bool InitWinsock(int _port, char* ip)
 
 int main()
 {
-	char ip[13] = "127.0.0.1";
+	char ip[15] = "127.0.0.1",
+		sendBuff[15] = "";
 	cout << "Server address:";
 	cout << ip << endl;
+
 	cout << "Please input your account:";
-	if (InitWinsock(8880, ip) == false)
+	cin >> sendBuff;
+	if (InitWinsock(8880, ip, sendBuff) == false)
 	{
 		cout << Error << endl;
 	}
-
+	cout << "Please input your command:";
+	cin >> sendBuff;
+	if (InitWinsock(8880, ip, sendBuff) == false)
+	{
+		cout << Error << endl;
+	}
 
 	return 0;
 }

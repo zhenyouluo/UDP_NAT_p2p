@@ -30,8 +30,20 @@ bool Client::initWinSock()
 	return true;
 }
 
-stMessagep Client::transmit(stMessagep temp)
+stMessagep Client::recvMessage()
 {
+	if (initWinSock() == false)
+	{
+		return nullptr;
+	}
+
+	msg = (stMessagep)malloc(sizeof(stMessage));
+	if (msg == nullptr)
+	{
+		return nullptr;
+	}
+
+
 	SOCKET sockSrv = socket(AF_INET, SOCK_DGRAM, 0);
 
 	SOCKADDR_IN  addrServ;
@@ -44,32 +56,26 @@ stMessagep Client::transmit(stMessagep temp)
 	SOCKADDR_IN  addrClient;
 	int length = sizeof(SOCKADDR);
 
-	recvBuff = (char*)malloc(sizeof(char) * 20);
+	msg->message = (char*)malloc(sizeof(char) * 20);
 
-	if (recvfrom(sockSrv, recvBuff, 100, 0, (SOCKADDR*)&addrClient, &length) < 0)
+	if (recvfrom(sockSrv, msg->message, 100, 0, (SOCKADDR*)&addrClient, &length) < 0)
 	{
 		cout << "Could not receive from Client:" << WSAGetLastError();
+		return nullptr;
 	}
 	else
 	{
-		temp->ip = inet_ntoa(addrClient.sin_addr);
-		temp->message = recvBuff;
+		msg->ip = inet_ntoa(addrClient.sin_addr);
 	}
 
 	closesocket(sockSrv);
 	WSACleanup();
 
-	return temp;
+	return msg;
 }
 
 ClientNodep Client::Create(ClientNodep obj)
 {
-	if (initWinSock() == false)
-	{
-		free(obj);
-		return nullptr;
-	}
-
 	if (obj == nullptr)
 	{
 		free(obj);
@@ -77,19 +83,21 @@ ClientNodep Client::Create(ClientNodep obj)
 	}
 	else
 	{
-		obj->next = nullptr;
 		msg = (stMessagep)malloc(sizeof(stMessage));
 		if (msg == nullptr)
 		{
 			return nullptr;
 		}
-		else
+		msg = recvMessage();
+		if (msg != nullptr)
 		{
-			msg = transmit(msg);
+			obj->id = msg->message;
+			obj->ip = msg->ip;
+			free(msg);
+			obj->port = 8880;
+			obj->next = nullptr;
 		}
-		obj->username = msg->message;
-		obj->ip = msg->ip;
-		obj->port = 8880;
+
 	}
 	return obj;
 }
@@ -122,6 +130,18 @@ ClientNodep Client::insert_tail(ClientNodep obj)
 	return head;
 }
 
+
+int Client::stagement()
+{
+
+	if (0 == strcmp(recvMessage()->message, "logout"))
+	{
+		return LOGOUT;
+	}
+
+	return 0;
+}
+
 void Client::print(ClientNodep obj)
 {
 	ClientNodep temp = nullptr;
@@ -133,16 +153,16 @@ void Client::print(ClientNodep obj)
 	}
 	else
 	{
+
 		cout << "Client list:" << endl;
 		while (temp != nullptr)
 		{
 			count++;
 			cout << "------------------" << endl;
-			cout << "UserID:" << temp->username << endl
+			cout << "UserID:" << temp->id << endl
 				<< "Address:" << temp->ip << ":" << temp->port << endl;
 			temp = temp->next;
 		}
 		cout << "online client(s):" << count << endl;
 	}
 }
-

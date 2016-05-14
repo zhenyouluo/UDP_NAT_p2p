@@ -15,7 +15,7 @@ int main()
 {
 	welcome();
 	int node_count = 0;
-	Client avilable;
+	Client available_client;
 	ClientNodep head = nullptr;
 	while (true)
 	{
@@ -26,12 +26,21 @@ int main()
 			return 1;
 		}
 
-		head = avilable.Create(newClientnode);
-		head = avilable.insert_tail(head);
-		avilable.print(head);
-
+		head = available_client.Create(newClientnode);
+		if (head == nullptr)
+		{
+			cout << "connect fail" << endl;
+		}
+		head = available_client.insert_tail(head);
+		available_client.print(head);
 		cout << "========================================" << endl << endl;
 
+		switch (available_client.stagement())
+		{
+		case LOGOUT:
+			cout << head->id << " Logout successfully" << endl;
+			break;
+		}
 	}
 
 	return 0;

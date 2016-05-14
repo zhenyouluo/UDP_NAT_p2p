@@ -1,12 +1,5 @@
 #pragma once
 
-typedef struct ClientNode
-{
-	char* username = nullptr;
-	char* ip = nullptr;
-	unsigned short port = 0;
-	ClientNode* next = nullptr;
-}*ClientNodep;
 
 typedef struct stMessage
 {
@@ -14,20 +7,28 @@ typedef struct stMessage
 	char* message = nullptr;
 }*stMessagep;
 
+typedef struct ClientNode
+{
+	char* ip = nullptr;
+	char* id = nullptr;
+	unsigned short port = 0;
+	ClientNode* next = nullptr;
+}*ClientNodep;
+
 
 class Client
 {
 public:
 	ClientNodep Create(ClientNodep);
 	ClientNodep insert_tail(ClientNodep);
+	stMessagep recvMessage();
+	int stagement();
 	void print(ClientNodep);
 protected:
 	bool initWinSock();
-	stMessagep transmit(stMessagep);
 private:
 	ClientNodep head = nullptr;
 	stMessagep msg = nullptr;
-	char* recvBuff = nullptr;
 	int err = 0;
 };
 
