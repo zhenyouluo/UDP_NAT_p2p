@@ -18,11 +18,13 @@ int main()
 	Client available_client;
 	ClientNodep head = nullptr;
 	ClientNodep clientNode = nullptr;
+	stMessagep recvMsg = nullptr;
 	while (true)
 	{
-		stMessagep recvMsg = new stMessage;
-
+		recvMsg = new stMessage;
+		//阻塞
 		recvMsg = available_client.recvMessage(recvMsg);
+
 		if (recvMsg == nullptr)
 		{
 			cout << "Receive fail !!!" << endl;
@@ -32,6 +34,8 @@ int main()
 
 		else
 		{
+			//用线程处理
+
 			switch (available_client.stagement(recvMsg))
 			{
 			case LOGIN:

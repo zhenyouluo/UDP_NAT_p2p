@@ -14,7 +14,7 @@
 using namespace std;
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include "server_define.h"
+#include "define.h"
 
 const int LOGIN = 0x01;
 const int LOGOUT = 0x02;

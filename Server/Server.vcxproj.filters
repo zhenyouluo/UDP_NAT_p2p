@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="server_define.h">
+    <ClInclude Include="define.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

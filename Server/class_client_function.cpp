@@ -72,9 +72,6 @@ bool Client::sendMessage(char* ip, char* msg)
 	return true;
 }
 
-
-
-
 stMessagep Client::recvMessage(stMessagep msg)
 {
 	if (initWinSock() == false)

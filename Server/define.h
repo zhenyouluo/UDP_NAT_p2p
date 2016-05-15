@@ -1,6 +1,5 @@
 #pragma once
 
-
 typedef struct stMessage
 {
 	char* ip = nullptr;
