@@ -26,6 +26,7 @@ public:
 	int stagement(stMessagep);
 	void print(ClientNodep);
 protected:
+
 	bool initWinSock();
 private:
 	ClientNodep head = nullptr;

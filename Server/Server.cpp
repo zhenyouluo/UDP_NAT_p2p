@@ -29,53 +29,60 @@ int main()
 			continue;
 		}
 
-		switch (available_client.stagement(recvMsg))
+
+		else
 		{
-		case LOGIN:
-			recvMsg = available_client.recvMessage(recvMsg);
-			if (recvMsg == nullptr)
+			switch (available_client.stagement(recvMsg))
 			{
-				cout << "Receive fail !!!" << endl;
-				break;
-			}
-			else
-			{
-				clientNode = new ClientNode;
-				clientNode = available_client.Create(recvMsg);
-				if (clientNode == nullptr)
+			case LOGIN:
+				recvMsg = available_client.recvMessage(recvMsg);
+				if (recvMsg == nullptr)
 				{
-					cout << "create fail !!!" << endl;
+					cout << "Receive fail !!!" << endl;
+					break;
 				}
 				else
 				{
-					system("CLS");
-					cout << clientNode->id;
-					head = available_client.insert_tail(clientNode);
-					if (head == nullptr)
+					clientNode = new ClientNode;
+					clientNode = available_client.Create(recvMsg);
+					if (clientNode == nullptr)
 					{
-						cout << " Login fail!!" << endl;
+						cout << "create fail !!!" << endl;
 					}
 					else
 					{
-						cout << " login successfully!!" << endl;
+						system("CLS");
+						cout << clientNode->id;
+						head = available_client.insert_tail(clientNode);
+						if (head == nullptr)
+						{
+							cout << " Login fail!!" << endl;
+						}
+						else
+						{
+							cout << " login successfully!!" << endl;
+						}
 					}
 				}
+				break;
 
+			case LOGOUT:
+				cout << " Logout successfully" << endl;
+				break;
+
+			case GET_ALL_USERS:
+				system("CLS");
+				available_client.print(head);
+				break;
+
+			case 0:
+				cout << "bad input" << endl;
+				if (available_client.sendMessage(recvMsg->ip, "FAIL!!") == false)
+				{
+					cout << "sendMessage fail!" << endl;
+				}
+				break;
 			}
-			break;
-
-		case LOGOUT:
-			cout << " Logout successfully" << endl;
-			break;
-
-		case GET_ALL_USERS:
-			system("CLS");
-			available_client.print(head);
-			break;
-
-		case 0:
-			available_client.sendMessage(recvMsg->ip, "FAIL!!");
-			break;
 		}
 	}
 
