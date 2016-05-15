@@ -94,8 +94,8 @@ stMessagep Client::recvMessage(stMessagep msg)
 	}
 	else
 	{
-		cout <<"Receive:"<< msg->message << endl;
 		msg->ip = inet_ntoa(addrClient.sin_addr);
+		cout << msg->ip << ":" << msg->message << endl;
 	}
 
 	closesocket(sockSrv);
