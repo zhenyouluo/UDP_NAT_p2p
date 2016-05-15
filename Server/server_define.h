@@ -19,15 +19,17 @@ typedef struct ClientNode
 class Client
 {
 public:
-	ClientNodep Create(ClientNodep);
+	ClientNodep Create(stMessagep);
 	ClientNodep insert_tail(ClientNodep);
-	stMessagep recvMessage();
-	int stagement();
+	stMessagep recvMessage(stMessagep);
+	bool sendMessage(char*, char*);
+	int stagement(stMessagep);
 	void print(ClientNodep);
 protected:
 	bool initWinSock();
 private:
 	ClientNodep head = nullptr;
+	ClientNodep node = nullptr;
 	stMessagep msg = nullptr;
 	int err = 0;
 };

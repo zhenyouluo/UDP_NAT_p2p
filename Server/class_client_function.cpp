@@ -24,25 +24,52 @@ bool Client::initWinSock()
 		WSACleanup();
 		return false;
 	}
-	else
-		cout << "WinSock.dll is running good\n";
 
 	return true;
 }
 
-stMessagep Client::recvMessage()
+bool Client::sendMessage(char* ip, char* msg)
+{
+
+	if (initWinSock() == false)
+	{
+		return false;
+	}
+
+
+	SOCKET sockClient = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+
+	SOCKADDR_IN  addrServ;
+	addrServ.sin_addr.S_un.S_addr = inet_addr(ip);
+	addrServ.sin_family = AF_INET;
+	addrServ.sin_port = htons(8880);
+
+	int len = sizeof(SOCKADDR);
+
+	if (sendto(sockClient, msg, strlen(msg) + 1, 0, (SOCKADDR*)&addrServ, len) < 0)
+	{
+		cout << "Could not send to Client:" << WSAGetLastError();
+		closesocket(sockClient);
+		WSACleanup();
+	}
+
+	else
+	{
+		cout << "Send successfully" << endl;
+	}
+
+
+	closesocket(sockClient);
+	WSACleanup();
+	return true;
+}
+
+stMessagep Client::recvMessage(stMessagep msg)
 {
 	if (initWinSock() == false)
 	{
 		return nullptr;
 	}
-
-	msg = (stMessagep)malloc(sizeof(stMessage));
-	if (msg == nullptr)
-	{
-		return nullptr;
-	}
-
 
 	SOCKET sockSrv = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -56,8 +83,10 @@ stMessagep Client::recvMessage()
 	SOCKADDR_IN  addrClient;
 	int length = sizeof(SOCKADDR);
 
-	msg->message = (char*)malloc(sizeof(char) * 20);
+	msg->message = new char[20];
 
+
+	cout << "Receiving......" << endl;
 	if (recvfrom(sockSrv, msg->message, 100, 0, (SOCKADDR*)&addrClient, &length) < 0)
 	{
 		cout << "Could not receive from Client:" << WSAGetLastError();
@@ -65,6 +94,7 @@ stMessagep Client::recvMessage()
 	}
 	else
 	{
+		cout << msg->message << endl;
 		msg->ip = inet_ntoa(addrClient.sin_addr);
 	}
 
@@ -74,32 +104,22 @@ stMessagep Client::recvMessage()
 	return msg;
 }
 
-ClientNodep Client::Create(ClientNodep obj)
+ClientNodep Client::Create(stMessagep msg)
 {
-	if (obj == nullptr)
+	if (msg == nullptr)
 	{
-		free(obj);
+		delete msg;
 		return nullptr;
 	}
 	else
 	{
-		msg = (stMessagep)malloc(sizeof(stMessage));
-		if (msg == nullptr)
-		{
-			return nullptr;
-		}
-		msg = recvMessage();
-		if (msg != nullptr)
-		{
-			obj->id = msg->message;
-			obj->ip = msg->ip;
-			free(msg);
-			obj->port = 8880;
-			obj->next = nullptr;
-		}
-
+		node = new ClientNode;
+		node->id = msg->message;
+		node->ip = msg->ip;
+		node->next = nullptr;
+		node->port = 8880;
 	}
-	return obj;
+	return node;
 }
 
 ClientNodep Client::insert_tail(ClientNodep obj)
@@ -130,16 +150,26 @@ ClientNodep Client::insert_tail(ClientNodep obj)
 	return head;
 }
 
-
-int Client::stagement()
+int Client::stagement(stMessagep temp)
 {
 
-	if (0 == strcmp(recvMessage()->message, "logout"))
+	if (temp == nullptr)
+	{
+		return 0;
+	}
+
+	if (0 == strcmp(temp->message, "login"))
+	{
+		return LOGIN;
+	}
+
+	if (0 == strcmp(temp->message, "logout"))
 	{
 		return LOGOUT;
 	}
 
 	return 0;
+
 }
 
 void Client::print(ClientNodep obj)
