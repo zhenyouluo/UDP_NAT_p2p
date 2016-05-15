@@ -1,15 +1,16 @@
-// Server.cpp : 定义控制台应用程序的入口点。
-//
+/*
+*		P2P跨局域网通信方案
+*		-------------------------------
+*		主要知识点：NAT穿透，Socket
+*		其他知识点：链表，多线程
+*		-------------------------------
+*		作者：Chife_Wu	github：https://github.com/CHIFCOOK/
+*/
 
 #include "stdafx.h"
 
-void welcome()
-{
-	printf("==========================================\n");
-	printf("=========    WRITTEN BY CHIFE    =========\n");
-	printf("==========================================\n");
-}
-
+//欢迎
+void welcome();
 
 int main()
 {
@@ -71,17 +72,19 @@ int main()
 				break;
 
 			case LOGOUT:
+				//删除结点
 				cout << " Logout successfully" << endl;
 				break;
 
 			case GET_ALL_USERS:
+				//发送用户链表
 				system("CLS");
 				available_client.print(head);
 				break;
-
+				
 			case 0:
 				cout << "bad input" << endl;
-				if (available_client.sendMessage(recvMsg->ip, "FAIL!!") == false)
+				if (available_client.sendMessage(recvMsg->ip, "FAIL!!") == false)		//此处有bug（sendmessage）
 				{
 					cout << "sendMessage fail!" << endl;
 				}
@@ -91,4 +94,13 @@ int main()
 	}
 
 	return 0;
+}
+
+
+
+void welcome()
+{
+	printf("==========================================\n");
+	printf("=========    WRITTEN BY CHIFE    =========\n");
+	printf("==========================================\n");
 }
