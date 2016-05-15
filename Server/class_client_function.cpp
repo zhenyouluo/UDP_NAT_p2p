@@ -94,7 +94,7 @@ stMessagep Client::recvMessage(stMessagep msg)
 	}
 	else
 	{
-		cout << msg->message << endl;
+		cout <<"Receive:"<< msg->message << endl;
 		msg->ip = inet_ntoa(addrClient.sin_addr);
 	}
 
@@ -168,6 +168,11 @@ int Client::stagement(stMessagep temp)
 		return LOGOUT;
 	}
 
+	if (0 == strcmp(temp->message, "list"))
+	{
+		return GET_ALL_USERS;
+	}
+
 	return 0;
 
 }
@@ -188,11 +193,12 @@ void Client::print(ClientNodep obj)
 		while (temp != nullptr)
 		{
 			count++;
-			cout << "------------------" << endl;
+			cout << "----------------------" << endl;
 			cout << "UserID:" << temp->id << endl
 				<< "Address:" << temp->ip << ":" << temp->port << endl;
 			temp = temp->next;
 		}
-		cout << "online client(s):" << count << endl;
+		cout << "----------------------" << endl << "online client(s):"
+			<< count << endl << "----------------------" << endl;
 	}
 }

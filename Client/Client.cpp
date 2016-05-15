@@ -55,16 +55,7 @@ bool sendMessage(int _port, char* ip, char* sendBuff)
 	if (sendto(sockClient, sendBuff, strlen(sendBuff) + 1, 0, (SOCKADDR*)&addrServ, len) < 0)
 	{
 		Error = WSAGetLastError();
-		closesocket(sockClient);
-		WSACleanup();
 	}
-
-	else
-	{
-		cout << "Send successfully" << endl;
-	}
-
-
 
 	closesocket(sockClient);
 
@@ -123,17 +114,18 @@ int main()
 	{
 		cout << Error << endl;
 	}
-	//if (recvMessage(8880, "127.0.0.1") == false)
-	//{
-	//	cout << Error << endl;
-	//}
 
-
-	cin >> sendBuff;
-	if (sendMessage(8880, "127.0.0.1", sendBuff) == false)
+	cout << "input your account:";
+	while (true)
 	{
-		cout << Error << endl;
+		cin >> sendBuff;
+		if (sendMessage(8880, "127.0.0.1", sendBuff) == false)
+		{
+			cout << Error << endl;
+		}
+		cout << ">>";
 	}
+
 
 	return 0;
 }
