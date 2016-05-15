@@ -107,10 +107,11 @@ bool recvMessage(int _port, char* ip)
 int main()
 {
 	char sendBuff[15] = "";
+	char ip[15] = "";
+	cout << "Server address:";
+	cin >> ip;
 
-	cout << "Server address:127.0.0.1" << endl;
-
-	if (sendMessage(8880, "127.0.0.1", "login") == false)
+	if (sendMessage(8880, ip, "login") == false)
 	{
 		cout << Error << endl;
 	}
@@ -119,7 +120,7 @@ int main()
 	while (true)
 	{
 		cin >> sendBuff;
-		if (sendMessage(8880, "127.0.0.1", sendBuff) == false)
+		if (sendMessage(8880, ip, sendBuff) == false)
 		{
 			cout << Error << endl;
 		}
